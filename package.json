@@ -1,0 +1,28 @@
+{
+  "name": "js-g16",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/couchjanus/js-g16.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/couchjanus/js-g16/issues"
+  },
+  "homepage": "https://github.com/couchjanus/js-g16#readme",
+  "devDependencies": {
+    "sass": "^1.23.7"
+  },
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "jquery": "^3.4.1",
+    "popper.js": "^1.14.7"
+  }
+}
