@@ -1,6 +1,6 @@
 // index.js
-import 'bootstrap';
-import $ from "jquery";
+// import 'bootstrap';
+// import $ from "jquery";
 
 // import './test';
-import './calc1';
+import './calc5';

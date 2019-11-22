@@ -1,18 +1,16 @@
-var x = Number(prompt("Enter x:"));
-var y = Number(prompt("Enter y:"));
+let display = document.getElementById('viewer');
 
-if (!(isNaN(x) || isNaN(y))) {
-    var operator = prompt("Enter operator:");
+console.log(display);
 
-    if (operator == '+') {
-        alert("x + y = " + (x + y));
-    } else if (operator == '-') {
-        alert("x - y = " + (x - y));
-    } else if (operator == '*') {
-        alert("x * y = " + (x * y));
-    } else if (operator == '/') {
-        alert("x / y = " + (x / y));
-    } else {
-        alert("Непонятная операция!");
-   }
-} else {alert("Это не похоже на число");}
+// div#viewer.viewer
+
+let b2 = document.getElementById('b2');
+console.log(b2);
+let b1 = document.getElementById('b1');
+console.log(b1);
+let plus = document.getElementById('plus');
+console.log(plus);
+let equal = document.getElementById('equal');
+console.log(equal);
+  
+
