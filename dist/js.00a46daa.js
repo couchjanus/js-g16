@@ -17982,56 +17982,72 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     value: true
   });
 });
-},{"jquery":"../node_modules/jquery/dist/jquery.js","popper.js":"../node_modules/popper.js/dist/esm/popper.js"}],"js/jqapp.js":[function(require,module,exports) {
-"use strict";
+},{"jquery":"../node_modules/jquery/dist/jquery.js","popper.js":"../node_modules/popper.js/dist/esm/popper.js"}],"js/app.js":[function(require,module,exports) {
+function el(selector) {
+  return document.querySelector(selector);
+}
 
-var _jquery = _interopRequireDefault(require("jquery"));
+function openCart() {
+  el(".sidebar").classList.add("active");
+  el(".overlay").classList.add("active");
+}
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function closeCart() {
+  el(".sidebar").classList.remove("active");
+  el(".overlay").classList.remove("active");
+}
 
-// (function() {
-// document.querySelector('#dismiss, .overlay').addEventListener('click', function(){
-//     document.getElementById('sidebar').classList.remove('active');
-//     document.querySelector('.overlay').classList.remove('active');
-// })
-//     document.getElementById('sidebarCollapse').addEventListener('click', function(){
-//         document.getElementById('sidebar').classList.add('active');
-//         document.querySelector('.overlay').classList.add('active');
-//         document.querySelector('.collapse.in').classList.toggle('in');
-//         document.querySelector('a[aria-expanded=true]').setAttribute('aria-expanded', 'false');
-//     })
-// })();
-(0, _jquery.default)(function () {
-  (0, _jquery.default)('#dismiss, .overlay').on('click', function () {
-    (0, _jquery.default)('#sidebar').removeClass('active');
-    (0, _jquery.default)('.overlay').removeClass('active');
+(function () {
+  el("#sidebarCollapse").addEventListener('click', function () {
+    openCart();
   });
-  (0, _jquery.default)('#sidebarCollapse').on('click', function () {
-    (0, _jquery.default)('#sidebar').addClass('active');
-    (0, _jquery.default)('.overlay').addClass('active');
-    (0, _jquery.default)('.collapse.in').toggleClass('in');
-    (0, _jquery.default)('a[aria-expanded=true]').attr('aria-expanded', 'false');
+  el(".dismiss").addEventListener('click', function () {
+    closeCart();
   });
-  (0, _jquery.default)('.add-to-cart').on('click', function () {
-    (0, _jquery.default)('.product-name').css('color', 'green');
-    (0, _jquery.default)('.product-price').css('color', 'red');
+  el(".overlay").addEventListener('click', function () {
+    closeCart();
   });
-  (0, _jquery.default)('.view-detail').on('click', function () {
-    (0, _jquery.default)('.product-name').css('color', 'green');
-    (0, _jquery.default)('.product-description').css('color', 'blue');
+  var addToCarts = document.querySelectorAll('.add-to-cart');
+  addToCarts.forEach(function (addToCart) {
+    addToCart.addEventListener('click', function () {
+      var y = 180;
+      this.closest(".card").firstElementChild.style.transform = 'rotateY(' + y + 'deg)';
+    });
   });
-});
-},{"jquery":"../node_modules/jquery/dist/jquery.js"}],"js/index.js":[function(require,module,exports) {
+  var plus = document.querySelectorAll('.plus');
+  plus.forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      var price = 55.00;
+      var val = parseInt(this.previousElementSibling.innerText);
+      val = this.previousElementSibling.innerText = val + 1;
+      this.parentNode.nextElementSibling.querySelector('.item-price').innerText = parseFloat(price * val).toFixed(2); // console.log(this.parentNode.nextElementSibling.querySelector('.item-price').innerText);
+    });
+  });
+  var minus = document.querySelectorAll('.minus');
+  minus.forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      var price = 55.00;
+      var val = parseInt(this.nextElementSibling.innerText);
+
+      if (val > 1) {
+        val = this.nextElementSibling.innerText = val - 1;
+      }
+
+      this.parentNode.nextElementSibling.querySelector('.item-price').innerText = parseFloat(price * val).toFixed(2);
+    });
+  });
+})();
+},{}],"js/index.js":[function(require,module,exports) {
 "use strict";
 
 require("bootstrap");
 
 var _jquery = _interopRequireDefault(require("jquery"));
 
-require("./jqapp");
+require("./app");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"bootstrap":"../node_modules/bootstrap/dist/js/bootstrap.js","jquery":"../node_modules/jquery/dist/jquery.js","./jqapp":"js/jqapp.js"}],"../../../.nvm/versions/node/v13.1.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"bootstrap":"../node_modules/bootstrap/dist/js/bootstrap.js","jquery":"../node_modules/jquery/dist/jquery.js","./app":"js/app.js"}],"../../../.nvm/versions/node/v13.1.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -18059,7 +18075,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "39363" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36105" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
