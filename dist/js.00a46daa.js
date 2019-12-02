@@ -17982,61 +17982,136 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     value: true
   });
 });
-},{"jquery":"../node_modules/jquery/dist/jquery.js","popper.js":"../node_modules/popper.js/dist/esm/popper.js"}],"js/app.js":[function(require,module,exports) {
-function el(selector) {
-  return document.querySelector(selector);
-}
-
-function openCart() {
-  el(".sidebar").classList.add("active");
-  el(".overlay").classList.add("active");
-}
-
-function closeCart() {
-  el(".sidebar").classList.remove("active");
-  el(".overlay").classList.remove("active");
-}
-
-(function () {
-  el("#sidebarCollapse").addEventListener('click', function () {
-    openCart();
-  });
-  el(".dismiss").addEventListener('click', function () {
-    closeCart();
-  });
-  el(".overlay").addEventListener('click', function () {
-    closeCart();
-  });
-  var addToCarts = document.querySelectorAll('.add-to-cart');
-  addToCarts.forEach(function (addToCart) {
-    addToCart.addEventListener('click', function () {
-      var y = 180;
-      this.closest(".card").firstElementChild.style.transform = 'rotateY(' + y + 'deg)';
-    });
-  });
-  var plus = document.querySelectorAll('.plus');
-  plus.forEach(function (el) {
-    el.addEventListener('click', function (e) {
-      var price = 55.00;
-      var val = parseInt(this.previousElementSibling.innerText);
-      val = this.previousElementSibling.innerText = val + 1;
-      this.parentNode.nextElementSibling.querySelector('.item-price').innerText = parseFloat(price * val).toFixed(2); // console.log(this.parentNode.nextElementSibling.querySelector('.item-price').innerText);
-    });
-  });
-  var minus = document.querySelectorAll('.minus');
-  minus.forEach(function (el) {
-    el.addEventListener('click', function (e) {
-      var price = 55.00;
-      var val = parseInt(this.nextElementSibling.innerText);
-
-      if (val > 1) {
-        val = this.nextElementSibling.innerText = val - 1;
-      }
-
-      this.parentNode.nextElementSibling.querySelector('.item-price').innerText = parseFloat(price * val).toFixed(2);
-    });
-  });
-})();
+},{"jquery":"../node_modules/jquery/dist/jquery.js","popper.js":"../node_modules/popper.js/dist/esm/popper.js"}],"js/test.js":[function(require,module,exports) {
+'use strict'; // let example = document.querySelector('.example');
+// let div = document.createElement("div");
+// let divText = document.createTextNode("Hello Element!");
+// div.appendChild(divText);
+// // appendChild Добавляет элемент в конец списка дочерних элементов родителя. 
+// example.appendChild(div);
+// ===============================================
+// Вставляемый узел становится последним в списке дочерних узлов элемента.
+// let aOne = document.createElement('a');
+// aOne.href = "http://google.com";
+// aOne.innerText = "Goodling!";
+// example.appendChild(aOne);
+// ===============================================
+// let element = document.createElement("article");
+// element.innerHTML = "<h2>Hello Article!</h2><div>Вставка в самое начало родителя, то есть перед первым узлом</div>";
+// let parent = document.querySelector('.example');
+// // Вставка в самое начало родителя, то есть перед первым узлом
+// parent.insertBefore(element, parent.firstChild);
+// ===============================================
+// Вставка после конкретного элемента parent.nextElementSibling
+// здесь происходит вставка перед тем узлом, который находится сразу за узлом parent.nextElementSibling
+// let element_next = document.createElement("article");
+// element_next.innerHTML = "<h2>Hello Sibling!</h2><div class='footer-example'>Вставка перед тем узлом, который находится сразу за узлом parent.nextElementSibling</div>";
+// parent.insertBefore(element_next, parent.nextElementSibling);
+// ===============================================
+// // Создаем новый пустой элемент
+// let sp1 = document.createElement("span");
+// // Присваиваем ему id 'newSpan'
+// sp1.setAttribute("id", "newSpan");
+// // Создаем строку.
+// let sp1_content = document.createTextNode("New replacement span element.");
+// // Добавляем контент в созданный нами узел
+// sp1.appendChild(sp1_content);
+// // создаем ссылку на элемент который будем заменять
+// let sp2 = document.querySelector('.footer-example');
+// let parentDiv = sp2.parentNode;
+// // заменяем существующий элемент sp2 на созданный нами sp1
+// parentDiv.replaceChild(sp1, sp2);
+// ===============================================
+// let list = document.querySelector('.example');
+// /* добавляем новый элемент */
+// list.insertAdjacentHTML('beforeend', '<a href="#"><i class="fab fa-github"></i></a>');
+// ===============================================
+// let templateSource = document.getElementById("template-item").innerHTML;       
+// let article = document.createElement("article");
+// article.innerHTML = document.getElementById("template-item").innerHTML;
+// document.querySelector('.example').appendChild(article);
+// let addToCarts = document.querySelectorAll('.add-to-cart');
+// addToCarts.forEach(function(addToCart){
+//     addToCart.addEventListener('click', function() {
+//         let y = 180;
+//         this.closest(".card").firstElementChild.style.transform = 'rotateY(' + y + 'deg)';
+//         let content = document.getElementById("cartItem").content;
+//         document.querySelector('.cart-items').appendChild(content);
+//     });
+// });
+// addToCarts.forEach(function(addToCart){
+//   addToCart.addEventListener('click', function() {
+//       let y = 180;
+//       this.closest(".card").firstElementChild.style.transform = 'rotateY(' + y + 'deg)';
+//       let content = document.getElementById("cartItem").content;
+//       document.querySelector('.cart-items').append(document.importNode(content, true));
+//   });
+// });
+// function addProductToCart(content){
+//   content.querySelector('.item-name').textContent = "Red Cat";
+//   content.querySelector('.quontity').textContent = 2;
+//   content.querySelector('.item-price').textContent = 12.34;
+//   content.querySelector('.item-img').style.backgroundImage = "url(02.cafa12f0.jpg)";
+//   document.querySelector('.cart-items').append(document.importNode(content, true));
+// }
+// addToCarts.forEach(function(addToCart){
+//   addToCart.addEventListener('click', function() {
+//       let y = 180;
+//       this.closest(".card").firstElementChild.style.transform = 'rotateY(' + y + 'deg)';
+//       let content = document.getElementById("cartItem").content;
+//       addProductToCart(content);
+//   });
+// });
+// ==================================================
+// function addProductToCart(content, item) {
+//   content.querySelector('.item-name').textContent = item.querySelector(".product-name").textContent;
+//   content.querySelector('.item-price').textContent = item.querySelector(".product-price").textContent;
+//   content.querySelector('.item-img').style.backgroundImage = "url("+item.querySelector("img").getAttribute('src')+")";
+//   ;
+//   document.querySelector('.cart-items').append(document.importNode(content, true));
+// }
+//   addToCarts.forEach(function(addToCart){
+//     addToCart.addEventListener('click', function() {
+//         let y = 180;
+//         this.closest(".card").firstElementChild.style.transform = 'rotateY(' + y + 'deg)';
+//         let content = document.getElementById("cartItem").content;
+//         addProductToCart(content, this.closest(".card"));
+//     });
+//   });
+// ==========================================
+//   function addProductToCart(content, item){
+//     content.querySelector('.item-name').textContent = item.querySelector(".product-name").textContent;
+//     content.querySelector('.item-price').textContent = item.querySelector(".product-price").textContent;
+//     content.querySelector('.item-img').style.backgroundImage = "url("+item.querySelector("img").getAttribute('src')+")";
+//     ;
+//     return content;
+// }
+// addToCarts.forEach(function(addToCart){
+//   addToCart.addEventListener('click', function() {
+//       let y = 180;
+//       this.closest(".card").firstElementChild.style.transform = 'rotateY(' + y + 'deg)';
+//       let content = document.getElementById("cartItem").content;
+//       document.querySelector('.cart-items').append(document.importNode(addProductToCart(content, this.closest(".card")), true));
+//   });
+// });
+// ===============================================
+//   function addProductToCart(content, item){
+//     content.querySelector('.item-name').textContent = item.querySelector(".product-name").textContent;
+//     content.querySelector('.item-price').textContent = item.querySelector(".product-price").textContent;
+//     content.querySelector('.item-img').style.backgroundImage = "url("+item.querySelector("img").getAttribute('src')+")";
+//     ;
+//     return content;
+// }
+// const content = document.getElementById("cartItem").content;
+// addToCarts.forEach(function(addToCart){
+//   addToCart.addEventListener('click', function() {
+//       let y = 180;
+//       this.closest(".card").firstElementChild.style.transform = 'rotateY(' + y + 'deg)';
+//       // let content = document.getElementById("cartItem").content;
+//       document.querySelector('.cart-items').append(document.importNode(addProductToCart(content, this.closest(".card")), true));
+//   });
+// });
+// ===============================================
 },{}],"js/index.js":[function(require,module,exports) {
 "use strict";
 
@@ -18044,10 +18119,10 @@ require("bootstrap");
 
 var _jquery = _interopRequireDefault(require("jquery"));
 
-require("./app");
+require("./test");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"bootstrap":"../node_modules/bootstrap/dist/js/bootstrap.js","jquery":"../node_modules/jquery/dist/jquery.js","./app":"js/app.js"}],"../../../.nvm/versions/node/v13.1.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"bootstrap":"../node_modules/bootstrap/dist/js/bootstrap.js","jquery":"../node_modules/jquery/dist/jquery.js","./test":"js/test.js"}],"../../../.nvm/versions/node/v13.1.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -18075,7 +18150,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36105" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36349" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
