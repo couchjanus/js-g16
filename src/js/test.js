@@ -1,176 +1,124 @@
 'use strict';
 
-// let example = document.querySelector('.example');
-// let div = document.createElement("div");
-// let divText = document.createTextNode("Hello Element!");
+// Добавлять методы и свойства в объекты можно при их создании:
 
-// div.appendChild(divText);
+const product = {
+  id: 0,
+  name: "Really Cool Cat",
+  price: 177,
+  picture: "cat3.jpg",
+};
 
-// // appendChild Добавляет элемент в конец списка дочерних элементов родителя. 
+product.description = "Really Cool Cat";
 
-// example.appendChild(div);
+// Контент шаблона
+const $template = document.getElementById("productItem").content;  
 
-// ===============================================
-// Вставляемый узел становится последним в списке дочерних узлов элемента.
-// let aOne = document.createElement('a');
-// aOne.href = "http://google.com";
-// aOne.innerText = "Goodling!";
-// example.appendChild(aOne);
+// $template
+//            .querySelector('.col-md-4')
+//            .setAttribute('productId', product.id);
+//  $template.querySelector('.product-name').textContent = product.name;
+//  $template.querySelector('.card-img-top')
+//            .setAttribute('src', 'images/' + product.picture);
+//  $template.querySelector('img').setAttribute('alt', product.name);
+//  $template.querySelector('.product-price').textContent = product.price;
 
-// ===============================================
-// let element = document.createElement("article");
-// element.innerHTML = "<h2>Hello Article!</h2><div>Вставка в самое начало родителя, то есть перед первым узлом</div>";
+// document.querySelector('.showcase').append(document.importNode($template, true));
 
-// let parent = document.querySelector('.example');
+function makeProductItem($template, product) {
+  $template
+      .querySelector('.col-md-4')
+      .setAttribute('productId', product.id);
+  $template.querySelector('.product-name').textContent = product.name;
+  $template.querySelector('.card-img-top')
+      .setAttribute('src', 'images/' + product.picture);
+  $template.querySelector('img').setAttribute('alt', product.name);
+  $template.querySelector('.product-price').textContent = product.price;
+  $template.querySelector('.card-text').textContent = product.description;
+  return $template;
+}
 
-// // Вставка в самое начало родителя, то есть перед первым узлом
-// parent.insertBefore(element, parent.firstChild);
+// document.querySelector('.showcase').append(document.importNode(makeProductItem($template, product), true));
 
-// ===============================================
-// Вставка после конкретного элемента parent.nextElementSibling
-// здесь происходит вставка перед тем узлом, который находится сразу за узлом parent.nextElementSibling
+// ====================Порядок перебора свойств===========================
 
-// let element_next = document.createElement("article");
-// element_next.innerHTML = "<h2>Hello Sibling!</h2><div class='footer-example'>Вставка перед тем узлом, который находится сразу за узлом parent.nextElementSibling</div>";
+var users = {
+  "9": 'Gertrude',
+  "3": 'Henry',
+  "1": 'Melvin'
+};
 
-// parent.insertBefore(element_next, parent.nextElementSibling);
-// ===============================================
-// // Создаем новый пустой элемент
-// let sp1 = document.createElement("span");
-// // Присваиваем ему id 'newSpan'
-// sp1.setAttribute("id", "newSpan");
-// // Создаем строку.
-// let sp1_content = document.createTextNode("New replacement span element.");
+for (var key in users) console.log( key ); // 1, 3, 9
 
-// // Добавляем контент в созданный нами узел
-// sp1.appendChild(sp1_content);
+var usersPlus = {
+  "+9": 'Gertrude',
+  "+3": 'Henry',
+  "+1": 'Melvin' };
 
-// // создаем ссылку на элемент который будем заменять
-// let sp2 = document.querySelector('.footer-example');
-// let parentDiv = sp2.parentNode;
+for (var key in usersPlus) {
+  var value = usersPlus[key];
+  key = +key; // ..если нужно именно число, преобразуем: "+1" -> 1
+  console.log( key + ": " + value ); // 9, 3, 1 во всех браузерах
+}
 
-// // заменяем существующий элемент sp2 на созданный нами sp1
-// parentDiv.replaceChild(sp1, sp2);
+// порядок перебора соответствует порядку присвоения свойства
+for (var prop in product) {
+  console.log( prop ); // id, name, price, picture, description
+}
 
-// ===============================================
-// let list = document.querySelector('.example');
+// const product = {
+//   id: 0,
+//   name: "Cool Cat",
+//   price: 177,
+//   picture: "cat1.jpg",
+//   description: "Lorem ipsum dolor sit amet, consectetur elit."
+// };
 
-// /* добавляем новый элемент */
-// list.insertAdjacentHTML('beforeend', '<a href="#"><i class="fab fa-github"></i></a>');
-
-// ===============================================
-// let templateSource = document.getElementById("template-item").innerHTML;       
-
-// let article = document.createElement("article");
-// article.innerHTML = document.getElementById("template-item").innerHTML;
-// document.querySelector('.example').appendChild(article);
-
-
-// let addToCarts = document.querySelectorAll('.add-to-cart');
-
-// addToCarts.forEach(function(addToCart){
-//     addToCart.addEventListener('click', function() {
-//         let y = 180;
-//         this.closest(".card").firstElementChild.style.transform = 'rotateY(' + y + 'deg)';
-
-//         let content = document.getElementById("cartItem").content;
-//         document.querySelector('.cart-items').appendChild(content);
-//     });
-// });
-
-
-// addToCarts.forEach(function(addToCart){
-//   addToCart.addEventListener('click', function() {
-//       let y = 180;
-//       this.closest(".card").firstElementChild.style.transform = 'rotateY(' + y + 'deg)';
-
-//       let content = document.getElementById("cartItem").content;
-//       document.querySelector('.cart-items').append(document.importNode(content, true));
-//   });
-// });
-
-
-// function addProductToCart(content){
-//   content.querySelector('.item-name').textContent = "Red Cat";
-//   content.querySelector('.quontity').textContent = 2;
-//   content.querySelector('.item-price').textContent = 12.34;
- 
-//   content.querySelector('.item-img').style.backgroundImage = "url(02.cafa12f0.jpg)";
-  
-//   document.querySelector('.cart-items').append(document.importNode(content, true));
+// for (let key in product) { 
+// console.log(key + ': ' + product[key]);
 // }
 
-// addToCarts.forEach(function(addToCart){
-//   addToCart.addEventListener('click', function() {
-//       let y = 180;
-//       this.closest(".card").firstElementChild.style.transform = 'rotateY(' + y + 'deg)';
-//       let content = document.getElementById("cartItem").content;
-//       addProductToCart(content);
-//   });
-// });
+let animals = ['🐔', '🐷', '🐑', '🐇'];
+let names = ['Gertrude', 'Henry', 'Melvin', 'Billy Bob'];
+
+for (let animal of animals) {
+  // Random name for our animal
+  let nameIdx = Math.floor(Math.random() * names.length);
+
+  console.log(`${names[nameIdx]} the ${animal}`);
+}
+
+// Строки также являются итеративным типом, поэтому вы можете использовать for…of для строк
+
+let str = 'abcde';
+
+for (let char of str) {
+  console.log(char.toUpperCase().repeat(3));
+}
 
 
 // ==================================================
+let data = [
+  {
+      id: 0,
+      name: "Cool Cat",
+      price: 177,
+      picture: "cat1.jpg",
+      description: "Lorem ipsum dolor sit amet, consectetur elit."
+  },
+  {
+    id: 1,
+    name: "Angry Dog",
+    price: 177,
+    picture: "cat2.jpg",
+    description: "Lorem ipsum dolor sit amet, consectetur elit."
+},
+]
+console.log(Object.keys(data));
+// консоль: Array(8) [ "0", "1" ]
 
-  // function addProductToCart(content, item) {
-  //   content.querySelector('.item-name').textContent = item.querySelector(".product-name").textContent;
-    
-  //   content.querySelector('.item-price').textContent = item.querySelector(".product-price").textContent;
-    
-  //   content.querySelector('.item-img').style.backgroundImage = "url("+item.querySelector("img").getAttribute('src')+")";
-  //   ;
-  //   document.querySelector('.cart-items').append(document.importNode(content, true));
-  // }
-    
-
-  //   addToCarts.forEach(function(addToCart){
-  //     addToCart.addEventListener('click', function() {
-  //         let y = 180;
-  //         this.closest(".card").firstElementChild.style.transform = 'rotateY(' + y + 'deg)';
-  //         let content = document.getElementById("cartItem").content;
-  //         addProductToCart(content, this.closest(".card"));
-  //     });
-  //   });
-        
-  // ==========================================
-
-//   function addProductToCart(content, item){
-//     content.querySelector('.item-name').textContent = item.querySelector(".product-name").textContent;
-//     content.querySelector('.item-price').textContent = item.querySelector(".product-price").textContent;
-//     content.querySelector('.item-img').style.backgroundImage = "url("+item.querySelector("img").getAttribute('src')+")";
-//     ;
-//     return content;
-// }
-
-// addToCarts.forEach(function(addToCart){
-//   addToCart.addEventListener('click', function() {
-//       let y = 180;
-//       this.closest(".card").firstElementChild.style.transform = 'rotateY(' + y + 'deg)';
-//       let content = document.getElementById("cartItem").content;
-//       document.querySelector('.cart-items').append(document.importNode(addProductToCart(content, this.closest(".card")), true));
-//   });
-// });
-
-  // ===============================================
-
-//   function addProductToCart(content, item){
-//     content.querySelector('.item-name').textContent = item.querySelector(".product-name").textContent;
-//     content.querySelector('.item-price').textContent = item.querySelector(".product-price").textContent;
-//     content.querySelector('.item-img').style.backgroundImage = "url("+item.querySelector("img").getAttribute('src')+")";
-//     ;
-//     return content;
-// }
-
-// const content = document.getElementById("cartItem").content;
-
-// addToCarts.forEach(function(addToCart){
-//   addToCart.addEventListener('click', function() {
-//       let y = 180;
-//       this.closest(".card").firstElementChild.style.transform = 'rotateY(' + y + 'deg)';
-//       // let content = document.getElementById("cartItem").content;
-//       document.querySelector('.cart-items').append(document.importNode(addProductToCart(content, this.closest(".card")), true));
-      
-//   });
-// });
+// Массивоподобный объект
+console.log(Object.keys(data[1]));
+// консоль: Array(5) [ "id", "name", "price", "image", "description" ]
 
 // ===============================================
