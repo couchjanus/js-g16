@@ -17982,140 +17982,34 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
     value: true
   });
 });
-},{"jquery":"../node_modules/jquery/dist/jquery.js","popper.js":"../node_modules/popper.js/dist/esm/popper.js"}],"js/test.js":[function(require,module,exports) {
-'use strict'; // Добавлять методы и свойства в объекты можно при их создании:
+},{"jquery":"../node_modules/jquery/dist/jquery.js","popper.js":"../node_modules/popper.js/dist/esm/popper.js"}],"js/jqtest.js":[function(require,module,exports) {
+'use strict';
 
-var product = {
-  id: 0,
-  name: "Really Cool Cat",
-  price: 177,
-  picture: "cat3.jpg"
-};
-product.description = "Really Cool Cat"; // Контент шаблона
+var _jquery = _interopRequireDefault(require("jquery"));
 
-var $template = document.getElementById("productItem").content; // $template
-//            .querySelector('.col-md-4')
-//            .setAttribute('productId', product.id);
-//  $template.querySelector('.product-name').textContent = product.name;
-//  $template.querySelector('.card-img-top')
-//            .setAttribute('src', 'images/' + product.picture);
-//  $template.querySelector('img').setAttribute('alt', product.name);
-//  $template.querySelector('.product-price').textContent = product.price;
-// document.querySelector('.showcase').append(document.importNode($template, true));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function makeProductItem($template, product) {
-  $template.querySelector('.col-md-4').setAttribute('productId', product.id);
-  $template.querySelector('.product-name').textContent = product.name;
-  $template.querySelector('.card-img-top').setAttribute('src', 'images/' + product.picture);
-  $template.querySelector('img').setAttribute('alt', product.name);
-  $template.querySelector('.product-price').textContent = product.price;
-  $template.querySelector('.card-text').textContent = product.description;
-  return $template;
-} // document.querySelector('.showcase').append(document.importNode(makeProductItem($template, product), true));
-// ====================Порядок перебора свойств===========================
+window.jQuery = window.$ = _jquery.default;
+(0, _jquery.default)(".add-to-cart").each(function (index, element) {
+  (0, _jquery.default)(element).on('click', function () {
+    (0, _jquery.default)(this).parents('.card').find('.win').show(1000); // $(this).parents('.card').find('.win').show('fast');
+    // $(this).parents('.card').find('.win').show(1000, 'linear');
+    // $(this).parents('.card').find('.win').show('fast', ‘swing’);
+    // $(this).parents('.card').find('.win').toggle(1000);
+    // $(this).parents('.card').find('.win').fadeIn('fast', 'swing');
+    // $(this).parents('.card').find('.win').fadeTo('slow', 'swing');
 
-
-var users = {
-  "9": 'Gertrude',
-  "3": 'Henry',
-  "1": 'Melvin'
-};
-
-for (var key in users) {
-  console.log(key);
-} // 1, 3, 9
-
-
-var usersPlus = {
-  "+9": 'Gertrude',
-  "+3": 'Henry',
-  "+1": 'Melvin'
-};
-
-for (var key in usersPlus) {
-  var value = usersPlus[key];
-  key = +key; // ..если нужно именно число, преобразуем: "+1" -> 1
-
-  console.log(key + ": " + value); // 9, 3, 1 во всех браузерах
-} // порядок перебора соответствует порядку присвоения свойства
-
-
-for (var prop in product) {
-  console.log(prop); // id, name, price, picture, description
-} // const product = {
-//   id: 0,
-//   name: "Cool Cat",
-//   price: 177,
-//   picture: "cat1.jpg",
-//   description: "Lorem ipsum dolor sit amet, consectetur elit."
-// };
-// for (let key in product) { 
-// console.log(key + ': ' + product[key]);
-// }
-
-
-var animals = ['🐔', '🐷', '🐑', '🐇'];
-var names = ['Gertrude', 'Henry', 'Melvin', 'Billy Bob'];
-
-for (var _i = 0, _animals = animals; _i < _animals.length; _i++) {
-  var animal = _animals[_i];
-  // Random name for our animal
-  var nameIdx = Math.floor(Math.random() * names.length);
-  console.log("".concat(names[nameIdx], " the ").concat(animal));
-} // Строки также являются итеративным типом, поэтому вы можете использовать for…of для строк
-
-
-var str = 'abcde';
-var _iteratorNormalCompletion = true;
-var _didIteratorError = false;
-var _iteratorError = undefined;
-
-try {
-  for (var _iterator = str[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-    var char = _step.value;
-    console.log(char.toUpperCase().repeat(3));
-  } // ==================================================
-
-} catch (err) {
-  _didIteratorError = true;
-  _iteratorError = err;
-} finally {
-  try {
-    if (!_iteratorNormalCompletion && _iterator.return != null) {
-      _iterator.return();
-    }
-  } finally {
-    if (_didIteratorError) {
-      throw _iteratorError;
-    }
-  }
-}
-
-var data = [{
-  id: 0,
-  name: "Cool Cat",
-  price: 177,
-  picture: "cat1.jpg",
-  description: "Lorem ipsum dolor sit amet, consectetur elit."
-}, {
-  id: 1,
-  name: "Angry Dog",
-  price: 177,
-  picture: "cat2.jpg",
-  description: "Lorem ipsum dolor sit amet, consectetur elit."
-}];
-console.log(Object.keys(data)); // консоль: Array(8) [ "0", "1" ]
-// Массивоподобный объект
-
-console.log(Object.keys(data[1])); // консоль: Array(5) [ "id", "name", "price", "image", "description" ]
-// ===============================================
-},{}],"js/index.js":[function(require,module,exports) {
+    (0, _jquery.default)(this).parents('.card').find('.win').slideDown('slow', 'swing');
+    (0, _jquery.default)(this).parents('.card').find('.win').slideUp('slow', 'linear');
+  });
+});
+},{"jquery":"../node_modules/jquery/dist/jquery.js"}],"js/index.js":[function(require,module,exports) {
 "use strict";
 
 require("bootstrap");
 
-require("./test");
-},{"bootstrap":"../node_modules/bootstrap/dist/js/bootstrap.js","./test":"js/test.js"}],"../../../.nvm/versions/node/v13.1.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+require("./jqtest");
+},{"bootstrap":"../node_modules/bootstrap/dist/js/bootstrap.js","./jqtest":"js/jqtest.js"}],"../../../.nvm/versions/node/v13.1.0/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -18143,7 +18037,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42107" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33595" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -1,124 +1,55 @@
 'use strict';
 
-// Добавлять методы и свойства в объекты можно при их создании:
-
-const product = {
-  id: 0,
-  name: "Really Cool Cat",
-  price: 177,
-  picture: "cat3.jpg",
-};
-
-product.description = "Really Cool Cat";
-
-// Контент шаблона
-const $template = document.getElementById("productItem").content;  
-
-// $template
-//            .querySelector('.col-md-4')
-//            .setAttribute('productId', product.id);
-//  $template.querySelector('.product-name').textContent = product.name;
-//  $template.querySelector('.card-img-top')
-//            .setAttribute('src', 'images/' + product.picture);
-//  $template.querySelector('img').setAttribute('alt', product.name);
-//  $template.querySelector('.product-price').textContent = product.price;
-
-// document.querySelector('.showcase').append(document.importNode($template, true));
-
-function makeProductItem($template, product) {
-  $template
-      .querySelector('.col-md-4')
-      .setAttribute('productId', product.id);
-  $template.querySelector('.product-name').textContent = product.name;
-  $template.querySelector('.card-img-top')
-      .setAttribute('src', 'images/' + product.picture);
-  $template.querySelector('img').setAttribute('alt', product.name);
-  $template.querySelector('.product-price').textContent = product.price;
-  $template.querySelector('.card-text').textContent = product.description;
-  return $template;
+function first(){
+  console.log(1);
 }
-
-// document.querySelector('.showcase').append(document.importNode(makeProductItem($template, product), true));
-
-// ====================Порядок перебора свойств===========================
-
-var users = {
-  "9": 'Gertrude',
-  "3": 'Henry',
-  "1": 'Melvin'
-};
-
-for (var key in users) console.log( key ); // 1, 3, 9
-
-var usersPlus = {
-  "+9": 'Gertrude',
-  "+3": 'Henry',
-  "+1": 'Melvin' };
-
-for (var key in usersPlus) {
-  var value = usersPlus[key];
-  key = +key; // ..если нужно именно число, преобразуем: "+1" -> 1
-  console.log( key + ": " + value ); // 9, 3, 1 во всех браузерах
+function second(){
+  console.log(2);
 }
+first();
+second();
+// функция first выполнится первой, а функция second после нее, и в консоли будет выведен следующий результат: 1 2
 
-// порядок перебора соответствует порядку присвоения свойства
-for (var prop in product) {
-  console.log( prop ); // id, name, price, picture, description
+// Но что если функция first содержит некий код, который не может выполниться немедленно? К примеру, запрос к API, где мы отправляем запрос и должны ждать ответа. Чтобы смоделировать такую ситуацию, мы используем функцию setTimeout, которая вызывает функцию после заданного временного промежутка. Мы отсрочим выполнение функции на 500 миллисекунд, как будто бы это запрос к некому API. Теперь код будет выглядеть так:
+
+function first(){
+  // Как будто бы запрос к API
+  setTimeout( function(){
+    console.log(1);
+  }, 500 );
 }
-
-// const product = {
-//   id: 0,
-//   name: "Cool Cat",
-//   price: 177,
-//   picture: "cat1.jpg",
-//   description: "Lorem ipsum dolor sit amet, consectetur elit."
-// };
-
-// for (let key in product) { 
-// console.log(key + ': ' + product[key]);
-// }
-
-let animals = ['🐔', '🐷', '🐑', '🐇'];
-let names = ['Gertrude', 'Henry', 'Melvin', 'Billy Bob'];
-
-for (let animal of animals) {
-  // Random name for our animal
-  let nameIdx = Math.floor(Math.random() * names.length);
-
-  console.log(`${names[nameIdx]} the ${animal}`);
+function second(){
+  console.log(2);
 }
+first();
+second();
+// Основная идея – теперь мы отложили исполнение команды console.log(1) на 500 миллисекунд.
+// теперь наша программа выведет 2 1
 
-// Строки также являются итеративным типом, поэтому вы можете использовать for…of для строк
+// Хотя мы по-прежнему вызываем функцию first первой, ее вывод появился вторым, после вывода функции second. Но JavaScript не нарушает порядок вызова функций, он просто не дожидается ответа от функции first, а сразу двигается дальше – к функции second.
 
-let str = 'abcde';
+// нельзя просто вызывать функции в нужном порядке и надеяться, что они в любом случае выполнятся в том же порядке. callback-функции позволяют нам быть уверенными в том, что определенный код не начнет исполнение до того момента, пока другой код не завершит исполнение./ push
 
-for (let char of str) {
-  console.log(char.toUpperCase().repeat(3));
-}
+let img = document.querySelector('.album img');
+let offset=-150;
+let rect = img.getBoundingClientRect();
 
+let elements = ['translate3D('];
 
-// ==================================================
-let data = [
-  {
-      id: 0,
-      name: "Cool Cat",
-      price: 177,
-      picture: "cat1.jpg",
-      description: "Lorem ipsum dolor sit amet, consectetur elit."
-  },
-  {
-    id: 1,
-    name: "Angry Dog",
-    price: 177,
-    picture: "cat2.jpg",
-    description: "Lorem ipsum dolor sit amet, consectetur elit."
-},
-]
-console.log(Object.keys(data));
-// консоль: Array(8) [ "0", "1" ]
-
-// Массивоподобный объект
-console.log(Object.keys(data[1]));
-// консоль: Array(5) [ "id", "name", "price", "image", "description" ]
-
+// elements.push(rect.left - offset + 'px,');
+// elements.push(rect.top - offset + 'px,0)');
+// console.log(elements);
+// Array(3)0: "translate3D("1: "876px,"2: "269px,0)"length: 3__proto__: Array(0)
 // ===============================================
+// elements.join('');
+// console.log(elements.join('')); // translate3D(360px,269px,0)
+// ===============================================
+// если нужно будет добавить новый элемент в конец массива, кроме push() можно использовать spread-оператор:
+// console.log([...elements, rect.left - offset + 'px,'])
+// console.log([...elements, rect.top - offset + 'px,0)'])
+
+// elements = [...elements, rect.left - offset + 'px,', rect.top - offset + 'px,0)'];
+// console.log(elements);
+// console.log(elements.join('')); // translate3D(360px,269px,0)
+elements = [...elements, rect.left - offset + 'px,', rect.top - offset + 'px,0)'].join('');
+console.log(elements);
