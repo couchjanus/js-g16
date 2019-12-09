@@ -251,7 +251,7 @@ function updateTotal() {
 
     const content = el('#cartItem').content;
     
-    // ---------------------add-to-cart-------------------------------
+    // ---------------------Step 6-------------------------------
 
     let addToCarts = document.querySelectorAll('.add-to-cart');
 
@@ -290,7 +290,7 @@ function updateTotal() {
         });
     });
 
-    // ---------------------plus-minus-remove-item -------------------------------
+    // ---------------------Step 6-------------------------------
 
     document.querySelector('.cart-items').addEventListener(
         'click',
@@ -343,6 +343,7 @@ function updateTotal() {
         false
     );
 
+    // ---------------------Step 7-------------------------------
     // =================Очистка всего хранилища================
     document.querySelector('.clear-cart').addEventListener('click', () => {
         localStorage.removeItem('basket');

@@ -117,14 +117,12 @@ function getProducts() {
     return JSON.parse(window.localStorage.getItem("basket"));
 }
 
-class Product {
-    constructor(id, name, price, picture, amount){
-          this.id = id;
-          this.name = name;
-          this.price = price;
-          this.picture = picture;
-          this.amount = amount;
-    }
+function saveCart(product) {
+    let tmpProducts = getProducts();
+    console.log(tmpProducts);
+    tmpProducts.push(product);
+    window.localStorage.setItem("basket",JSON.stringify(tmpProducts));
+    console.log(localStorage);
 }
 
 function productInCart(content, item) {
@@ -168,66 +166,6 @@ function getProductId(item) {
     return item.closest('.card').querySelector('.win').getAttribute('productId');
 }
 
-function addProduct(prod){
-    let tmpProducts = getProducts();
-
-    if(tmpProducts.length > 0){
-      let exist = tmpProducts.some(elem => {
-        return elem.id === prod.id;
-      });
-      if(exist){
-        tmpProducts.forEach(elem => {
-            if(elem.id === prod.id){
-              elem.amount += 1;
-            }
-        })
-      } else {
-        tmpProducts.push(new Product(prod.id,prod.name,prod.price,prod.picture,1));
-      }
-    }
-    else{
-      tmpProducts.push(new Product(prod.id,prod.name,prod.price,prod.picture,1));
-    }
-    window.localStorage.setItem("basket",JSON.stringify(tmpProducts));
-}
-
-function removeProduct(index){
-    let tmpProducts = getProducts();
-    tmpProducts.splice(tmpProducts.indexOf(tmpProducts.find(x => x.id === +(index))), 1);
-    window.localStorage.setItem("basket",JSON.stringify(tmpProducts));
-}
-
-function plusProduct(id){
-    let tmpProducts = getProducts();
-    tmpProducts.forEach(elem => {
-        if(elem.id === +(id)){
-          elem.amount += 1;
-        }
-    });
-    window.localStorage.setItem("basket",JSON.stringify(tmpProducts));
-}
-
-function minusProduct(id){
-    let tmpProducts = getProducts();
-    tmpProducts.forEach(elem => {
-        if(elem.id === +(id)){
-          elem.amount -= 1;
-        }
-    });
-    window.localStorage.setItem("basket",JSON.stringify(tmpProducts));
-}
-
-function updateTotal() {
-    var quantities = 0,
-    total = 0,
-    $cartTotal = document.querySelector('.cart-total span'),
-    items = document.querySelector('.cart-items').children;
-    Array.from(items).forEach(function (item) {
-        total += parseFloat(item.querySelector('.item-price').textContent);
-    });
-    $cartTotal.textContent = parseFloat(Math.round(total * 100) / 100).toFixed(2);
-}
-
 //=====================================================
 
 (function() {
@@ -251,111 +189,52 @@ function updateTotal() {
 
     const content = el('#cartItem').content;
     
-    // ---------------------add-to-cart-------------------------------
-
+    // -------------------Step 2-------------------------------
     let addToCarts = document.querySelectorAll('.add-to-cart');
 
     addToCarts.forEach(function(addToCart) {
-        addToCart.addEventListener('click', function() {
+      addToCart.addEventListener('click', function() {
 
-            addProduct(getProductItem(dataItem(getProductId(this))));
+        // let prodItem = getProductItem(dataItem(this.closest('.card').querySelector('.win').getAttribute("productId")));
+        let prodItem = getProductItem(dataItem(getProductId(this)));
+        console.log(prodItem);
 
-            let imgItem = this.closest('.card').querySelector('img');
-            let win = this.closest('.card').querySelector('.win');
+        let imgItem = this.closest('.card').querySelector('img');
+        let win = this.closest('.card').querySelector('.win');
 
-            if (imgItem) {
-                let imgClone = imgItem.cloneNode(true);
-                imgClone.classList.add('offset-img');
+        if (imgItem) {
+            let imgClone = imgItem.cloneNode(true);
+            imgClone.classList.add('offset-img');
 
-                document.body.appendChild(imgClone);
+            document.body.appendChild(imgClone);
 
-                imgItem.style.transform = 'rotateY(180deg)';
-                win.style.display = 'block';
+            imgItem.style.transform = 'rotateY(180deg)';
+            win.style.display = 'block';
 
-                imgClone.animate([{
-                    transform: _translate(imgItem)
-                    },
-                    {
-                        transform: _translate(document.querySelector('#sidebarCollapse'), 50) + 'perspective(500px) scale3d(0.1, 0.1, 0.2)'
-                    },
-                ], {
-                    duration: 2000,
-                })
-                .onfinish = function() {
-                    imgClone.remove();
-                    imgItem.style.transform = 'rotateY(0deg)';
-                    win.style.display = 'none';
-                };
-            }
-        });
+            imgClone.animate([{
+                transform: _translate(imgItem)
+                },
+                {
+                    transform: _translate(document.querySelector('#sidebarCollapse'), 50) + 'perspective(500px) scale3d(0.1, 0.1, 0.2)'
+                },
+            ], {
+                duration: 2000,
+            })
+            .onfinish = function() {
+                imgClone.remove();
+                imgItem.style.transform = 'rotateY(0deg)';
+                win.style.display = 'none';
+            };
+        }
+      });
     });
 
-    // ---------------------plus-minus-remove-item -------------------------------
-
-    document.querySelector('.cart-items').addEventListener(
-        'click',
-        function(e) {
-            if (e.target && e.target.matches('.remove-item')) {
-                let index = e.target.closest('.cart-item').getAttribute('id');
-                removeProduct(index);
-                e.target.parentNode.parentNode.remove();
-                updateTotal();
-            }
-            if (e.target && e.target.matches('.plus')) {
-                let el = e.target;
-                let price = parseFloat(
-                    el.parentNode.nextElementSibling
-                        .querySelector('.item-price')
-                        .getAttribute('price')
-                );
-
-                let id = el.closest('.cart-item').getAttribute('id');
-                plusProduct(id);
-                let val = parseInt(el.previousElementSibling.innerText);
-                val = el.previousElementSibling.innerText = val + 1;
-                
-                el.parentNode.nextElementSibling.querySelector(
-                    '.item-price'
-                ).innerText = parseFloat(price * val).toFixed(2);
-                updateTotal();
-            }
-
-            if (e.target && e.target.matches('.minus')) {
-                let el = e.target;
-                let price = parseFloat(
-                    el.parentNode.nextElementSibling
-                        .querySelector('.item-price')
-                        .getAttribute('price')
-                );
-                
-                let val = parseInt(el.nextElementSibling.innerText);
-                let id = el.closest('.cart-item').getAttribute('id');
-                if (val > 1) {
-                    minusProduct(id);
-                    val = el.nextElementSibling.innerText = val - 1;
-                }
-                el.parentNode.nextElementSibling.querySelector(
-                    '.item-price'
-                ).innerText = parseFloat(price * val).toFixed(2);
-                updateTotal();
-            }
-        },
-        false
-    );
-
-    // =================Очистка всего хранилища================
-    document.querySelector('.clear-cart').addEventListener('click', () => {
-        localStorage.removeItem('basket');
-        initStorage();
-        document.querySelector('.cart-items').innerHTML = '';
-        updateTotal();
-    });
-    
 // ------------------------View Details----------------------------
     const viewDetails = document.querySelectorAll('.view-detail');
     viewDetails.forEach(function(element) {
         element.addEventListener('click', function() {
             let dataId = getProductId(this);
+            // let dataId = this.closest('.card').querySelector('.win').getAttribute('productId');
             carousel(data[dataId]);
         });
     });

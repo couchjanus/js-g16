@@ -251,7 +251,7 @@ function updateTotal() {
 
     const content = el('#cartItem').content;
     
-    // ---------------------add-to-cart-------------------------------
+    // ---------------------Step 6-------------------------------
 
     let addToCarts = document.querySelectorAll('.add-to-cart');
 
@@ -290,7 +290,7 @@ function updateTotal() {
         });
     });
 
-    // ---------------------plus-minus-remove-item -------------------------------
+    // ---------------------Step 6-------------------------------
 
     document.querySelector('.cart-items').addEventListener(
         'click',
@@ -342,20 +342,13 @@ function updateTotal() {
         },
         false
     );
-
-    // =================Очистка всего хранилища================
-    document.querySelector('.clear-cart').addEventListener('click', () => {
-        localStorage.removeItem('basket');
-        initStorage();
-        document.querySelector('.cart-items').innerHTML = '';
-        updateTotal();
-    });
     
 // ------------------------View Details----------------------------
     const viewDetails = document.querySelectorAll('.view-detail');
     viewDetails.forEach(function(element) {
         element.addEventListener('click', function() {
             let dataId = getProductId(this);
+            // let dataId = this.closest('.card').querySelector('.win').getAttribute('productId');
             carousel(data[dataId]);
         });
     });

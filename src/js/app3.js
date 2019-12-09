@@ -127,6 +127,15 @@ class Product {
     }
 }
 
+function saveCart(product) {
+    let tmpProducts = getProducts();
+    console.log(tmpProducts);
+    tmpProducts.push(new Product(product.id, product.name, product.price, product.picture, 1));
+    console.log(tmpProducts);
+    window.localStorage.setItem("basket",JSON.stringify(tmpProducts));
+    console.log(localStorage);
+}
+
 function productInCart(content, item) {
     content.querySelector('.cart-item').setAttribute('id', item.id);
     content.querySelector('.item-title').textContent = item.name;
@@ -168,66 +177,6 @@ function getProductId(item) {
     return item.closest('.card').querySelector('.win').getAttribute('productId');
 }
 
-function addProduct(prod){
-    let tmpProducts = getProducts();
-
-    if(tmpProducts.length > 0){
-      let exist = tmpProducts.some(elem => {
-        return elem.id === prod.id;
-      });
-      if(exist){
-        tmpProducts.forEach(elem => {
-            if(elem.id === prod.id){
-              elem.amount += 1;
-            }
-        })
-      } else {
-        tmpProducts.push(new Product(prod.id,prod.name,prod.price,prod.picture,1));
-      }
-    }
-    else{
-      tmpProducts.push(new Product(prod.id,prod.name,prod.price,prod.picture,1));
-    }
-    window.localStorage.setItem("basket",JSON.stringify(tmpProducts));
-}
-
-function removeProduct(index){
-    let tmpProducts = getProducts();
-    tmpProducts.splice(tmpProducts.indexOf(tmpProducts.find(x => x.id === +(index))), 1);
-    window.localStorage.setItem("basket",JSON.stringify(tmpProducts));
-}
-
-function plusProduct(id){
-    let tmpProducts = getProducts();
-    tmpProducts.forEach(elem => {
-        if(elem.id === +(id)){
-          elem.amount += 1;
-        }
-    });
-    window.localStorage.setItem("basket",JSON.stringify(tmpProducts));
-}
-
-function minusProduct(id){
-    let tmpProducts = getProducts();
-    tmpProducts.forEach(elem => {
-        if(elem.id === +(id)){
-          elem.amount -= 1;
-        }
-    });
-    window.localStorage.setItem("basket",JSON.stringify(tmpProducts));
-}
-
-function updateTotal() {
-    var quantities = 0,
-    total = 0,
-    $cartTotal = document.querySelector('.cart-total span'),
-    items = document.querySelector('.cart-items').children;
-    Array.from(items).forEach(function (item) {
-        total += parseFloat(item.querySelector('.item-price').textContent);
-    });
-    $cartTotal.textContent = parseFloat(Math.round(total * 100) / 100).toFixed(2);
-}
-
 //=====================================================
 
 (function() {
@@ -251,14 +200,15 @@ function updateTotal() {
 
     const content = el('#cartItem').content;
     
-    // ---------------------add-to-cart-------------------------------
-
+    // ----------------------Step 3------------------------------
     let addToCarts = document.querySelectorAll('.add-to-cart');
 
     addToCarts.forEach(function(addToCart) {
         addToCart.addEventListener('click', function() {
 
-            addProduct(getProductItem(dataItem(getProductId(this))));
+            let prodItem = getProductItem(dataItem(getProductId(this)));
+            saveCart(getProductItem(dataItem(getProductId(this))));
+            // saveCart(getProductItem(dataItem(this.closest('.card').querySelector('.win').getAttribute("productId"))));
 
             let imgItem = this.closest('.card').querySelector('img');
             let win = this.closest('.card').querySelector('.win');
@@ -289,73 +239,13 @@ function updateTotal() {
             }
         });
     });
-
-    // ---------------------plus-minus-remove-item -------------------------------
-
-    document.querySelector('.cart-items').addEventListener(
-        'click',
-        function(e) {
-            if (e.target && e.target.matches('.remove-item')) {
-                let index = e.target.closest('.cart-item').getAttribute('id');
-                removeProduct(index);
-                e.target.parentNode.parentNode.remove();
-                updateTotal();
-            }
-            if (e.target && e.target.matches('.plus')) {
-                let el = e.target;
-                let price = parseFloat(
-                    el.parentNode.nextElementSibling
-                        .querySelector('.item-price')
-                        .getAttribute('price')
-                );
-
-                let id = el.closest('.cart-item').getAttribute('id');
-                plusProduct(id);
-                let val = parseInt(el.previousElementSibling.innerText);
-                val = el.previousElementSibling.innerText = val + 1;
-                
-                el.parentNode.nextElementSibling.querySelector(
-                    '.item-price'
-                ).innerText = parseFloat(price * val).toFixed(2);
-                updateTotal();
-            }
-
-            if (e.target && e.target.matches('.minus')) {
-                let el = e.target;
-                let price = parseFloat(
-                    el.parentNode.nextElementSibling
-                        .querySelector('.item-price')
-                        .getAttribute('price')
-                );
-                
-                let val = parseInt(el.nextElementSibling.innerText);
-                let id = el.closest('.cart-item').getAttribute('id');
-                if (val > 1) {
-                    minusProduct(id);
-                    val = el.nextElementSibling.innerText = val - 1;
-                }
-                el.parentNode.nextElementSibling.querySelector(
-                    '.item-price'
-                ).innerText = parseFloat(price * val).toFixed(2);
-                updateTotal();
-            }
-        },
-        false
-    );
-
-    // =================Очистка всего хранилища================
-    document.querySelector('.clear-cart').addEventListener('click', () => {
-        localStorage.removeItem('basket');
-        initStorage();
-        document.querySelector('.cart-items').innerHTML = '';
-        updateTotal();
-    });
     
 // ------------------------View Details----------------------------
     const viewDetails = document.querySelectorAll('.view-detail');
     viewDetails.forEach(function(element) {
         element.addEventListener('click', function() {
             let dataId = getProductId(this);
+            // let dataId = this.closest('.card').querySelector('.win').getAttribute('productId');
             carousel(data[dataId]);
         });
     });
