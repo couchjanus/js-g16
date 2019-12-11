@@ -18052,6 +18052,8 @@ exports.data = data;
 
 var _data = require("./data.js");
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 function el(selector) {
   return document.querySelector(selector);
 }
@@ -18141,13 +18143,15 @@ function getProducts() {
   return JSON.parse(window.localStorage.getItem("basket"));
 }
 
-function saveCart(product) {
-  var tmpProducts = getProducts();
-  console.log(tmpProducts);
-  tmpProducts.push(product);
-  window.localStorage.setItem("basket", JSON.stringify(tmpProducts));
-  console.log(localStorage);
-}
+var Product = function Product(id, name, price, picture, amount) {
+  _classCallCheck(this, Product);
+
+  this.id = id;
+  this.name = name;
+  this.price = price;
+  this.picture = picture;
+  this.amount = amount;
+};
 
 function productInCart(content, item) {
   content.querySelector('.cart-item').setAttribute('id', item.id);
@@ -18173,8 +18177,90 @@ function showCart() {
     var template = document.getElementById("cartItem").content;
     document.querySelector(".cart-items").append(document.importNode(productInCart(template, item), true));
   });
+}
+
+function dataItem(id) {
+  return _data.data[id];
+}
+
+function getProductItem(item) {
+  return {
+    id: item.id,
+    price: item.price,
+    name: item.name,
+    picture: "images/" + item.picture[0]
+  };
+}
+
+function getProductId(item) {
+  return item.closest('.card').querySelector('.win').getAttribute('productId');
+}
+
+function addProduct(prod) {
+  var tmpProducts = getProducts();
+
+  if (tmpProducts.length > 0) {
+    var exist = tmpProducts.some(function (elem) {
+      return elem.id === prod.id;
+    });
+
+    if (exist) {
+      tmpProducts.forEach(function (elem) {
+        if (elem.id === prod.id) {
+          elem.amount += 1;
+        }
+      });
+    } else {
+      tmpProducts.push(new Product(prod.id, prod.name, prod.price, prod.picture, 1));
+    }
+  } else {
+    tmpProducts.push(new Product(prod.id, prod.name, prod.price, prod.picture, 1));
+  }
+
+  window.localStorage.setItem("basket", JSON.stringify(tmpProducts));
+}
+
+function removeProduct(index) {
+  var tmpProducts = getProducts();
+  tmpProducts.splice(tmpProducts.indexOf(tmpProducts.find(function (x) {
+    return x.id === +index;
+  })), 1);
+  window.localStorage.setItem("basket", JSON.stringify(tmpProducts));
+}
+
+function plusProduct(id) {
+  var tmpProducts = getProducts();
+  tmpProducts.forEach(function (elem) {
+    if (elem.id === +id) {
+      elem.amount += 1;
+    }
+  });
+  window.localStorage.setItem("basket", JSON.stringify(tmpProducts));
+}
+
+function minusProduct(id) {
+  var tmpProducts = getProducts();
+  tmpProducts.forEach(function (elem) {
+    if (elem.id === +id) {
+      elem.amount -= 1;
+    }
+  });
+  window.localStorage.setItem("basket", JSON.stringify(tmpProducts));
+}
+
+function updateTotal() {
+  var quantities = 0,
+      total = 0,
+      $cartTotal = document.querySelector('.cart-total span'),
+      items = document.querySelector('.cart-items').children;
+  Array.from(items).forEach(function (item) {
+    total += parseFloat(item.querySelector('.item-price').textContent);
+  });
+  $cartTotal.textContent = parseFloat(Math.round(total * 100) / 100).toFixed(2);
 } //=====================================================
 
+
+var url = 'https://my-json-server.typicode.com/couchjanus/db/products'; // const url = 'http://localhost:3000/products';
 
 (function () {
   initStorage();
@@ -18192,56 +18278,106 @@ function showCart() {
   el('.overlay').addEventListener('click', function () {
     return closeCart();
   });
-  var template = el('#productItem').content; // Make Product Item
+  var template = el('#productItem').content;
+  fetch(url).then(function (response) {
+    if (response.status !== 200) {
+      console.log('Looks like there was a problem. Status Code: ' + response.status);
+      return;
+    }
 
-  _data.data.forEach(function (item) {
-    el('.showcase').append(makeProductItem(template, item).cloneNode(true));
-  });
+    response.json().then(function (data) {
+      // Make Product Item
+      data.forEach(function (item) {
+        el('.showcase').append(makeProductItem(template, item).cloneNode(true));
+      });
+      var content = el('#cartItem').content; // ---------------------add-to-cart-------------------------------
 
-  var content = el('#cartItem').content; // ---------------------Step 1-----------------------------------
+      var addToCarts = document.querySelectorAll('.add-to-cart');
+      addToCarts.forEach(function (addToCart) {
+        addToCart.addEventListener('click', function () {
+          addProduct(getProductItem(dataItem(getProductId(this))));
+          var imgItem = this.closest('.card').querySelector('img');
+          var win = this.closest('.card').querySelector('.win');
 
-  var addToCarts = document.querySelectorAll('.add-to-cart');
-  addToCarts.forEach(function (addToCart) {
-    addToCart.addEventListener('click', function () {
-      // создадим объект
-      var product = {
-        id: 2,
-        name: 'Black Cat',
-        price: 555,
-        picture: ['cat1.jpg', 'cat2.jpg', 'cat3.jpg']
-      };
-      saveCart(product);
-      var imgItem = this.closest('.card').querySelector('img');
-      var win = this.closest('.card').querySelector('.win');
+          if (imgItem) {
+            var imgClone = imgItem.cloneNode(true);
+            imgClone.classList.add('offset-img');
+            document.body.appendChild(imgClone);
+            imgItem.style.transform = 'rotateY(180deg)';
+            win.style.display = 'block';
 
-      if (imgItem) {
-        var imgClone = imgItem.cloneNode(true);
-        imgClone.classList.add('offset-img');
-        document.body.appendChild(imgClone);
-        imgItem.style.transform = 'rotateY(180deg)';
-        win.style.display = 'block';
+            imgClone.animate([{
+              transform: _translate(imgItem)
+            }, {
+              transform: _translate(document.querySelector('#sidebarCollapse'), 50) + 'perspective(500px) scale3d(0.1, 0.1, 0.2)'
+            }], {
+              duration: 2000
+            }).onfinish = function () {
+              imgClone.remove();
+              imgItem.style.transform = 'rotateY(0deg)';
+              win.style.display = 'none';
+            };
+          }
+        });
+      }); // ---------------------plus-minus-remove-item -------------------------------
 
-        imgClone.animate([{
-          transform: _translate(imgItem)
-        }, {
-          transform: _translate(document.querySelector('#sidebarCollapse'), 50) + 'perspective(500px) scale3d(0.1, 0.1, 0.2)'
-        }], {
-          duration: 2000
-        }).onfinish = function () {
-          imgClone.remove();
-          imgItem.style.transform = 'rotateY(0deg)';
-          win.style.display = 'none';
-        };
-      }
+      document.querySelector('.cart-items').addEventListener('click', function (e) {
+        if (e.target && e.target.matches('.remove-item')) {
+          var index = e.target.closest('.cart-item').getAttribute('id');
+          removeProduct(index);
+          e.target.parentNode.parentNode.remove();
+          updateTotal();
+        }
+
+        if (e.target && e.target.matches('.plus')) {
+          var _el = e.target;
+          var price = parseFloat(_el.parentNode.nextElementSibling.querySelector('.item-price').getAttribute('price'));
+
+          var id = _el.closest('.cart-item').getAttribute('id');
+
+          plusProduct(id);
+          var val = parseInt(_el.previousElementSibling.innerText);
+          val = _el.previousElementSibling.innerText = val + 1;
+          _el.parentNode.nextElementSibling.querySelector('.item-price').innerText = parseFloat(price * val).toFixed(2);
+          updateTotal();
+        }
+
+        if (e.target && e.target.matches('.minus')) {
+          var _el2 = e.target;
+
+          var _price = parseFloat(_el2.parentNode.nextElementSibling.querySelector('.item-price').getAttribute('price'));
+
+          var _val = parseInt(_el2.nextElementSibling.innerText);
+
+          var _id = _el2.closest('.cart-item').getAttribute('id');
+
+          if (_val > 1) {
+            minusProduct(_id);
+            _val = _el2.nextElementSibling.innerText = _val - 1;
+          }
+
+          _el2.parentNode.nextElementSibling.querySelector('.item-price').innerText = parseFloat(_price * _val).toFixed(2);
+          updateTotal();
+        }
+      }, false); // =================Очистка всего хранилища================
+
+      document.querySelector('.clear-cart').addEventListener('click', function () {
+        localStorage.removeItem('basket');
+        initStorage();
+        document.querySelector('.cart-items').innerHTML = '';
+        updateTotal();
+      }); // ------------------------View Details----------------------------
+
+      var viewDetails = document.querySelectorAll('.view-detail');
+      viewDetails.forEach(function (element) {
+        element.addEventListener('click', function () {
+          var dataId = getProductId(this);
+          carousel(data[dataId]);
+        });
+      });
     });
-  }); // ------------------------View Details----------------------------
-
-  var viewDetails = document.querySelectorAll('.view-detail');
-  viewDetails.forEach(function (element) {
-    element.addEventListener('click', function () {
-      var dataId = this.closest('.card').querySelector('.win').getAttribute('productId');
-      carousel(_data.data[dataId]);
-    });
+  }).catch(function (err) {
+    console.log('Fetch Error :-S', err);
   });
 })();
 },{"./data.js":"js/data.js"}],"js/index.js":[function(require,module,exports) {
@@ -18278,7 +18414,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "40255" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "46539" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
